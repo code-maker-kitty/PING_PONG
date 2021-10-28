@@ -27,3 +27,6 @@ h4{
     display: inline-block;
     width: 45%;
 }
+canvas{
+    border: 3px solid transparent ;
+}

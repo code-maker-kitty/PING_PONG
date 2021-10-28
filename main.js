@@ -1,4 +1,7 @@
-
+rightWristX=0;
+rightWristY=0;
+scorerightWrist=0;
+game_status = "";
 /*created by prashant shukla */
 
 var paddle2 =10,paddle1=10;
@@ -20,15 +23,33 @@ var ball = {
     dx:3,
     dy:3
 }
-
-function setup() {
-	canvas = createCanvas(1240,336);
-	canvas.parent('canvas')
-	instializeInSetup(mario);
+poseNet.on('pose', gotPoses);
+function gotPoses(results){
+	if(results.length > 0){
+		console.log(results);
+		rightWristX = results[0].pose.rightWrist.x;
+		rightWristY = results[0].pose.rightWrist.y;
+}   }
+function startGame(){
+  gaem_status = "start";
+  document.getElementById("status").innerHTML = "Game Is Loaded";
 }
-
+function setup() {
+	canvas = createCanvas(600,700);
+	canvas.parent('canvas');
+  video = createCapture(VIDEO);
+  video.size(700,600);
+  video.parent('canvas');
+  video.hide();
+  poseNet = ml5.poseNet(video, modelLoaded);
+  poseNet.on('pose', gotPoses);
+}
+function modelLoaded(){
+  console.log("Model is Loaded");
+}
 function draw(){
-
+  if(game_status == "start")
+circle(rightWristX,rightWristY,20);
  background(0); 
 
  fill("black");
@@ -132,7 +153,7 @@ if(pcscore ==4){
     fill("white");
     stroke("white");
     textSize(25)
-    text("Game Over!☹☹",width/2,height/2);
+    text("you are dead",width/2,height/2);
     text("Reload The Page!",width/2,height/2+30)
     noLoop();
     pcscore = 0;
